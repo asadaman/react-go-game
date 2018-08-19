@@ -1,14 +1,17 @@
 import React from 'react';
+import { bindActionCreators } from 'redux'
+import { connect } from 'react-redux'
+import AppActions from '../actions/AppActions'
 import './Points.css'
 
-const Points = ({clickBoard, boardState}) => {
+const Points = ({putStone, boardState}) => {
   const points = [];
   for (let i = 0; i < 9; i++) {
     points.push(
       <Row
         key={"row" + i}
         rowNum={i}
-        clickBoard={clickBoard}
+        putStone={putStone}
         boardState={boardState}
       />
     )
@@ -20,7 +23,7 @@ const Points = ({clickBoard, boardState}) => {
   )
 }
 
-const Row = ({rowNum, clickBoard, boardState}) => {
+const Row = ({rowNum, putStone, boardState}) => {
   const row = [];
   for (let i = 0; i < 9; i++) {
     row.push(
@@ -28,7 +31,7 @@ const Row = ({rowNum, clickBoard, boardState}) => {
         key={"square" + rowNum + i}
         rowNum={rowNum}
         columnNum={i}
-        clickBoard={clickBoard}
+        putStone={putStone}
         boardState={boardState}
       />
     )
@@ -38,10 +41,11 @@ const Row = ({rowNum, clickBoard, boardState}) => {
   )
 }
 
-const Square = ({rowNum, columnNum, clickBoard, boardState}) => (
+const Square = ({rowNum, columnNum, putStone, boardState}) => (
   <div
     className="square"
-    onClick={() => clickBoard(rowNum, columnNum)}
+    onClick={() => putStone(rowNum, columnNum)}
+    onClick={() => clickBoard(boardState, rowNum, columnNum, putStone)}
   >
     <Stone
       rowNum={rowNum}
@@ -52,6 +56,8 @@ const Square = ({rowNum, columnNum, clickBoard, boardState}) => (
 )
 
 const Stone = ({rowNum, columnNum, boardState}) => {
+  console.log(rowNum + ', ' + columnNum)
+  console.log(boardState[0][0])
   if (boardState[rowNum][columnNum]) {
     const isBlack = boardState[rowNum][columnNum] == 'BLACK'
     const stoneClassName = isBlack ? "black-stone" : "white-stone";
@@ -63,4 +69,19 @@ const Stone = ({rowNum, columnNum, boardState}) => {
   }
 }
 
-export default Points
+const clickBoard = (boardState, rowNum, columnNum, putStone) => {
+  if (!boardState[rowNum][columnNum]) {
+    putStone(rowNum, columnNum)
+  }
+}
+
+const mapStateToProps = (state) => ({
+  boardState: state.boardState
+})
+
+const mapDispatchToProps = (dispatch) => {
+  const putStone = AppActions.PutStoneAction
+  return bindActionCreators(putStone, dispatch)
+}
+
+export default connect(mapStateToProps, mapDispatchToProps)(Points)
