@@ -1,53 +1,6 @@
 .App {
-  text-align: center;
-}
-
-.App-header {
-  background-color: #222;
-  height: 70px;
-  padding: 20px;
-  color: white;
-}
-
-.background {
-  background-image: url("images/board.svg");
-  background-size: cover;
-  width: 441px;
-  height: 490px;
-  margin-top: 30px;
-  margin-left: 420px;
-}
-
-.board {
-  background: none;
-  padding-top: 10px;
-}
-
-.board-row:after {
-  clear: both;
-  content: "";
-  display: table;
-}
-
-.square {
-  background: none;
-  border: 0;
-  float: left;
-  line-height: 55px;
-  height: 55px;
-  margin-right: -1px;
-  margin-top: -1px;
-  padding: 0;
-  text-align: center;
-  width: 50px;
-}
-
-.square:focus {
-  outline: none;
-}
-
-.stone {
-  width: 45px;
+  background: white;
+  position: relative;
 }
 
 .kbd-navigation .square:focus {
