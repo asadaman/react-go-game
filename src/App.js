@@ -27,15 +27,17 @@ class App extends React.Component {
   }
 
   clickBoard(row, colomn) {
-    let boardState = []
-    for (let i=0; i<9; i++) {
-      boardState.push(this.state.boardState[i].slice())
+    if (!this.state.boardState[row][colomn]){
+      let boardState = []
+      for (let i=0; i<9; i++) {
+        boardState.push(this.state.boardState[i].slice())
+      }
+      boardState[row][colomn] = this.state.blackIsNext ? BLACK : WHITE;
+      this.setState({
+        boardState: boardState,
+        blackIsNext: !this.state.blackIsNext,
+      });
     }
-    boardState[row][colomn] = this.state.blackIsNext ? BLACK : WHITE;
-    this.setState({
-      boardState: boardState,
-      blackIsNext: !this.state.blackIsNext,
-    });
   }
 
   render() {
