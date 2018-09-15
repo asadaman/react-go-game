@@ -56,7 +56,7 @@ const Square = ({rowNum, columnNum, putStone, squareState}) => (
 
 const Stone = ({state}) => {
   if (state) {
-    const stoneClassName = state == 'BLACK' ? "black-stone" : "white-stone";
+    const stoneClassName = state === 'BLACK' ? "black-stone" : "white-stone";
     return (
       <div className={"stone" + " " + stoneClassName}/>
     )

@@ -17,7 +17,7 @@ const addStoneOnBogard = (board, rowNum, colomnNum, isBlackNext) => {
   let newBoard = getEmptyBoard()
   for (let i=0; i<9; i++) {
     for (let j=0; j<9; j++) {
-      if (i==rowNum && j==colomnNum) {
+      if (i===rowNum && j===colomnNum) {
         newBoard[i][j] = stone
       } else {
         newBoard[i][j] = board[i][j]
