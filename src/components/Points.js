@@ -12,7 +12,7 @@ const Points = ({putStone, boardState}) => {
         key={"row" + i}
         rowNum={i}
         putStone={putStone}
-        boardState={boardState}
+        rowState={boardState[i]}
       />
     )
   }
@@ -23,7 +23,7 @@ const Points = ({putStone, boardState}) => {
   )
 }
 
-const Row = ({rowNum, putStone, boardState}) => {
+const Row = ({rowNum, putStone, rowState}) => {
   const row = [];
   for (let i = 0; i < 9; i++) {
     row.push(
@@ -32,7 +32,7 @@ const Row = ({rowNum, putStone, boardState}) => {
         rowNum={rowNum}
         columnNum={i}
         putStone={putStone}
-        boardState={boardState}
+        squareState={rowState[i]}
       />
     )
   }
@@ -41,26 +41,22 @@ const Row = ({rowNum, putStone, boardState}) => {
   )
 }
 
-const Square = ({rowNum, columnNum, putStone, boardState}) => (
+const Square = ({rowNum, columnNum, putStone, squareState}) => (
   <div
     className="square"
-    onClick={() => putStone(rowNum, columnNum)}
-    onClick={() => clickBoard(boardState, rowNum, columnNum, putStone)}
+    onClick={() => clickBoard(squareState, rowNum, columnNum, putStone)}
   >
     <Stone
       rowNum={rowNum}
       columnNum={columnNum}
-      boardState={boardState}
+      state={squareState}
     />
   </div>
 )
 
-const Stone = ({rowNum, columnNum, boardState}) => {
-  console.log(rowNum + ', ' + columnNum)
-  console.log(boardState[0][0])
-  if (boardState[rowNum][columnNum]) {
-    const isBlack = boardState[rowNum][columnNum] == 'BLACK'
-    const stoneClassName = isBlack ? "black-stone" : "white-stone";
+const Stone = ({state}) => {
+  if (state) {
+    const stoneClassName = state == 'BLACK' ? "black-stone" : "white-stone";
     return (
       <div className={"stone" + " " + stoneClassName}/>
     )
@@ -69,19 +65,21 @@ const Stone = ({rowNum, columnNum, boardState}) => {
   }
 }
 
-const clickBoard = (boardState, rowNum, columnNum, putStone) => {
-  if (!boardState[rowNum][columnNum]) {
+const clickBoard = (state, rowNum, columnNum, putStone) => {
+  if (!state) {
     putStone(rowNum, columnNum)
   }
 }
 
-const mapStateToProps = (state) => ({
-  boardState: state.boardState
-})
+const mapStateToProps = (state) => {
+  return {
+    boardState: state.boardState
+  }
+}
 
 const mapDispatchToProps = (dispatch) => {
-  const putStone = AppActions.PutStoneAction
-  return bindActionCreators(putStone, dispatch)
+  const putStone = (row, colomn) => AppActions.PutStoneAction(row, colomn)
+  return bindActionCreators({putStone}, dispatch)
 }
 
 export default connect(mapStateToProps, mapDispatchToProps)(Points)

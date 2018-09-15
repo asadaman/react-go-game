@@ -32,7 +32,7 @@ const reducer = (state = initialState, action) => {
     case 'PUT_STONE':
       const boardState = addStoneOnBogard(state.boardState, action.payload.row, action.payload.colomn, state.isBlackNext)
       const isBlackNext = !state.isBlackNext
-      const newState = Object.assign({}, boardState, isBlackNext)
+      const newState = Object.assign({}, {boardState: boardState, isBlackNext: isBlackNext})
       return newState
     default:
       return state
