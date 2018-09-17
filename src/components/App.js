@@ -1,9 +1,10 @@
-import * as React from 'react';
-import './App.css';
+import * as React from 'react'
+import './App.css'
 import AppHeader from './AppHeader'
 import Board from './Board'
 import BoardLines from './BoardLines'
 import Points from './Points'
+import RecordControlPanel from './RecordControlPanel'
 
 class App extends React.Component {
   render() {
@@ -13,6 +14,7 @@ class App extends React.Component {
         <Board />
         <BoardLines />
         <Points />
+        <RecordControlPanel />
       </div>
     )
   }

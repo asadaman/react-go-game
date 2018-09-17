@@ -1,10 +1,11 @@
-import React from 'react';
+import React from 'react'
 import { bindActionCreators } from 'redux'
 import { connect } from 'react-redux'
 import AppActions from '../actions/AppActions'
 import './Points.css'
 
-const Points = ({putStone, boardState}) => {
+const Points = ({putStone, addRecord, addCounter, boardState, record, counter, mode}) => {
+  const displayedBoard = mode==='play' ? boardState : record[counter-1]
   const points = [];
   for (let i = 0; i < 9; i++) {
     points.push(
@@ -12,7 +13,10 @@ const Points = ({putStone, boardState}) => {
         key={"row" + i}
         rowNum={i}
         putStone={putStone}
-        rowState={boardState[i]}
+        addRecord={addRecord}
+        addCounter={addCounter}
+        rowState={displayedBoard[i]}
+        mode={mode}
       />
     )
   }
@@ -23,7 +27,7 @@ const Points = ({putStone, boardState}) => {
   )
 }
 
-const Row = ({rowNum, putStone, rowState}) => {
+const Row = ({rowNum, putStone, addRecord, addCounter, rowState, mode}) => {
   const row = [];
   for (let i = 0; i < 9; i++) {
     row.push(
@@ -32,7 +36,10 @@ const Row = ({rowNum, putStone, rowState}) => {
         rowNum={rowNum}
         columnNum={i}
         putStone={putStone}
+        addRecord={addRecord}
+        addCounter={addCounter}
         squareState={rowState[i]}
+        mode={mode}
       />
     )
   }
@@ -41,45 +48,52 @@ const Row = ({rowNum, putStone, rowState}) => {
   )
 }
 
-const Square = ({rowNum, columnNum, putStone, squareState}) => (
-  <div
-    className="square"
-    onClick={() => clickBoard(squareState, rowNum, columnNum, putStone)}
-  >
-    <Stone
-      rowNum={rowNum}
-      columnNum={columnNum}
-      state={squareState}
-    />
-  </div>
-)
+const Square = ({rowNum, columnNum, putStone, addRecord, addCounter, squareState, mode}) => {
+  return (
+    <div
+      className="square"
+      onClick={() => clickBoard(squareState, rowNum, columnNum, putStone, addRecord, addCounter, mode)}
+    >
+      <Stone
+        state={squareState}
+      />
+    </div>
+  )
+}
 
 const Stone = ({state}) => {
   if (state) {
     const stoneClassName = state === 'BLACK' ? "black-stone" : "white-stone";
     return (
-      <div className={"stone" + " " + stoneClassName}/>
+      <div className={"stone " + stoneClassName} />
     )
   } else {
     return null
   }
 }
 
-const clickBoard = (state, rowNum, columnNum, putStone) => {
-  if (!state) {
+const clickBoard = (state, rowNum, columnNum, putStone, addRecord, addCounter, mode) => {
+  if (!state && mode==='play') {
     putStone(rowNum, columnNum)
+    addRecord(rowNum, columnNum) 
+    addCounter(1)
   }
 }
 
 const mapStateToProps = (state) => {
   return {
-    boardState: state.boardState
+    boardState: state.boardState,
+    record: state.record,
+    counter: state.counter,
+    mode: state.mode
   }
 }
 
 const mapDispatchToProps = (dispatch) => {
   const putStone = (row, colomn) => AppActions.PutStoneAction(row, colomn)
-  return bindActionCreators({putStone}, dispatch)
+  const addRecord = (row, colomn) => AppActions.AddRecordAction(row, colomn)
+  const addCounter = (number) => AppActions.ChangeCounterAction(number)
+  return bindActionCreators({putStone, addRecord, addCounter}, dispatch)
 }
 
 export default connect(mapStateToProps, mapDispatchToProps)(Points)
